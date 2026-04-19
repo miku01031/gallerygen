@@ -110,6 +110,7 @@ type Dictionary = {
     shareHeading: string;
     shareDescription: string;
     shareHint: string;
+    snippetTip: string;
     bottomSummary: (photoCount: number) => string;
   };
   templates: {
@@ -220,7 +221,7 @@ const dictionaries: Record<AppLanguage, Dictionary> = {
       template: "Template",
       active: "Active",
       templateDescription:
-        "Switch between the editorial archive layout and the structured screenshot showcase.",
+        "Switch between Editorial / Archive and Showcase / Product.",
       galleryTitle: "Gallery title",
       galleryTitlePlaceholder: "Summer Collection",
       galleryDescription: "Gallery description",
@@ -231,7 +232,7 @@ const dictionaries: Record<AppLanguage, Dictionary> = {
       projectUrl: "Project URL",
       projectUrlPlaceholder: "https://github.com/your-name/your-project",
       projectUrlHelp:
-        "Template B only. This link appears at the bottom of the exported showcase page.",
+        "Showcase / Product template only. This link appears at the bottom of the exported showcase page.",
       editorial: "Editorial",
       showcase: "Showcase",
     },
@@ -266,6 +267,8 @@ const dictionaries: Record<AppLanguage, Dictionary> = {
         "After you get the public URL, paste the snippet below into your GitHub README, project page, or portfolio.",
       shareHint:
         "Before using it, replace the example deployed link with your own public URL.",
+      snippetTip:
+        "Tip: host your images on Netlify first, then update the link here.",
       bottomSummary: (photoCount) =>
         `${photoCount} images packaged successfully. You can keep editing, or get a shareable public link now.`,
     },
@@ -375,7 +378,7 @@ const dictionaries: Record<AppLanguage, Dictionary> = {
       description: "更新实时预览与导出结果共用的画廊设置。",
       template: "模板",
       active: "当前",
-      templateDescription: "在编辑感归档布局与结构化展示模板之间切换。",
+      templateDescription: "在 Editorial / Archive 与 Showcase / Product 之间切换。",
       galleryTitle: "图库标题",
       galleryTitlePlaceholder: "夏日作品集",
       galleryDescription: "图库描述",
@@ -384,7 +387,7 @@ const dictionaries: Record<AppLanguage, Dictionary> = {
       galleryThemeDescription: "控制预览和导出后的展示页主题，不影响编辑器界面。",
       projectUrl: "项目主页链接",
       projectUrlPlaceholder: "https://github.com/your-name/your-project",
-      projectUrlHelp: "仅用于 Template B。会在导出后的展示页底部显示一个项目入口链接。",
+      projectUrlHelp: "仅用于 Showcase / Product 模板。会在导出后的展示页底部显示一个项目入口链接。",
       editorial: "编辑感",
       showcase: "展示型",
     },
@@ -410,6 +413,7 @@ const dictionaries: Record<AppLanguage, Dictionary> = {
       shareHeading: "README 片段生成器",
       shareDescription: "拿到公开链接后，把下面这段内容粘贴到 GitHub README、项目主页或作品集页面。",
       shareHint: "使用前请先把示例中的部署链接替换成你自己的公开地址。",
+      snippetTip: "小贴士：先把图片发布到 Netlify，再把生成的链接替换到这里。",
       bottomSummary: (photoCount) =>
         `已打包 ${photoCount} 张图片。你可以继续编辑，也可以现在去获取一个可分享的公开链接。`,
     },
@@ -446,20 +450,20 @@ export function getReadmeSnippet(language: AppLanguage): string {
   if (language === "zh") {
     return `## 📸 视觉展示
 
-查看完整项目展示页：[点这里](在这里替换为你的部署链接)
+[![画廊预览](REPLACE_WITH_PREVIEW_IMAGE_URL)](REPLACE_WITH_YOUR_DEPLOYED_LINK)
 
-<div align="right">
-  <i>由 <a href="REPLACE_WITH_GALLERYGEN_REPO_LINK">GalleryGen</a> 生成</i>
-</div>`;
+> *[点击查看完整交互展示页](REPLACE_WITH_YOUR_DEPLOYED_LINK)*
+
+<sub>由 <a href="https://github.com/miku01031/gallerygen">GalleryGen</a> 生成</sub>`;
   }
 
-  return `## 📸 Showcase
+  return `## 📸 Visual Showcase
 
-View the full project gallery here: [Open Gallery](PASTE_YOUR_DEPLOYED_LINK_HERE)
+[![Gallery Preview](REPLACE_WITH_PREVIEW_IMAGE_URL)](REPLACE_WITH_YOUR_DEPLOYED_LINK)
 
-<div align="right">
-  <i>Generated with <a href="REPLACE_WITH_GALLERYGEN_REPO_LINK">GalleryGen</a></i>
-</div>`;
+> *[Click to view the full interactive showcase](REPLACE_WITH_YOUR_DEPLOYED_LINK)*
+
+<sub>Generated with <a href="https://github.com/miku01031/gallerygen">GalleryGen</a></sub>`;
 }
 
 export function getPhotoCountLabel(language: AppLanguage, photoCount: number): string {

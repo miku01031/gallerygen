@@ -241,6 +241,10 @@ export function ExportSuccessModal({
                   </pre>
                 </div>
 
+                <p className="mt-4 rounded-xl border border-amber-200/60 bg-amber-50/80 px-3 py-2 text-xs leading-5 text-amber-800 dark:border-amber-400/20 dark:bg-amber-400/10 dark:text-amber-200">
+                  {dictionary.exportSuccess.snippetTip}
+                </p>
+
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
                     {dictionary.exportSuccess.shareHint}
