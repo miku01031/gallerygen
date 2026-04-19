@@ -4,7 +4,7 @@
 >
 > 把本地截图、产品视觉或摄影作品，在几分钟内整理成一页精致的静态展示站 —— 离线完成。
 
-![GalleryGen preview](public/readme/template-b-cover.png)
+![GalleryGen preview](public/readme/hero.png)
 
 ---
 
@@ -77,17 +77,37 @@ Best for SaaS screenshots, open-source project demos, UI mockups, and design boa
 
 ---
 
-## Publishing the Result / 发布导出结果
+## After You Export / 导出之后怎么做
 
-- **Netlify Drop** — fastest way to get a public `*.netlify.app` URL. Unzip, drag the folder in, done.
-- **GitHub Pages** — GitHub-native long-term home. Upload the files into a repo and enable Pages.
-- **README snippet generator** — copy a visual, link-ready snippet from the export success modal to paste back into your project README.
+Once you click **Export ZIP**, here is the full path from local file to a shareable public URL.
 
-发布路径：
+点击 **Export ZIP** 之后，从本地文件到可分享公开链接的完整流程如下。
 
-- **Netlify Drop** — 最快获得公开 `*.netlify.app` 链接。解压、拖入文件夹即可。
-- **GitHub Pages** — GitHub 原生的长期托管方案。把文件上传到仓库并启用 Pages。
-- **README 片段生成器** — 在导出成功弹窗里复制带预览图的片段，直接贴回你的项目 README。
+### 1. Unzip & preview locally / 解压并本地预览
+
+Extract `your-gallery.zip` into any folder. You can open `index.html` directly in a browser to check the final look before publishing.
+
+把 `your-gallery.zip` 解压到任意文件夹。发布之前可以直接用浏览器打开 `index.html` 检查最终效果。
+
+### 2. Get a public link with Netlify Drop / 用 Netlify Drop 获取公开链接
+
+The fastest path. Open [Netlify Drop](https://app.netlify.com/drop), drag the **extracted folder** (not the ZIP) onto the page, and you will immediately get a `*.netlify.app` URL. Sign in to keep and update the same link over time.
+
+最快的一条路径。打开 [Netlify Drop](https://app.netlify.com/drop)，把**解压后的文件夹**（不是 ZIP）拖到页面上，立刻就能拿到一个 `*.netlify.app` 公开链接。登录后可以长期保留并更新这个链接。
+
+### 3. (Optional) Host on GitHub Pages for long-term projects / （可选）用 GitHub Pages 做长期托管
+
+Prefer to keep the showcase alongside your project? Create a new repository (or a `gh-pages` branch on an existing one), upload the exported files, and enable Pages in repository settings. Good for open-source project pages and project docs.
+
+希望展示页长期挂在 GitHub 项目旁边？新建一个仓库（或在已有仓库创建 `gh-pages` 分支），上传导出的文件，在仓库 Settings 里启用 Pages。适合开源项目主页和项目文档。
+
+### 4. Paste the README snippet back / 把 README 片段贴回去
+
+The export success modal gives you a bilingual Markdown snippet with a visual preview card. Replace `REPLACE_WITH_PREVIEW_IMAGE_URL` and `REPLACE_WITH_YOUR_DEPLOYED_LINK` with your own image URL and the public URL from step 2 or 3, then paste it into your project README, portfolio, or project page.
+
+导出成功弹窗会提供一段中英双语的 Markdown 片段（带可点击的预览图卡片）。把 `REPLACE_WITH_PREVIEW_IMAGE_URL` 和 `REPLACE_WITH_YOUR_DEPLOYED_LINK` 分别替换成你自己的图片地址和第 2 或 3 步得到的公开链接，然后贴到项目 README、作品集或项目主页里。
+
+> **Tip / 小贴士:** host your images on Netlify first (step 2), then copy the image URL back into the README snippet — that way the preview card renders directly on GitHub. / 先把图片发布到 Netlify（第 2 步），再把图片地址贴回 README 片段，这样 GitHub 上就能直接渲染预览卡片。
 
 ---
 
