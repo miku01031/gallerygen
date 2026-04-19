@@ -1,0 +1,10 @@
+- This repository is a static-export Next.js application.
+- Prefer browser-safe implementations.
+- Do not introduce backend code, authentication, or database code.
+- Keep upload, transform, preview, and export logic separated.
+- Reuse the normalized gallery schema across preview and export.
+- Default to TypeScript, small components, and pure utility functions.
+- Before suggesting a large refactor, explain why it is necessary.
+- Prefer incremental changes that preserve the current working state.
+- For UI work, keep layouts mobile-first and visually clean.
+- For bug fixing, always identify the root cause before changing code.
