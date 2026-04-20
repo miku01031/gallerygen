@@ -4,22 +4,25 @@
 >
 > 把本地截图、产品视觉或摄影作品，在几分钟内整理成一页精致的静态展示站 —— 离线完成。
 
+**Use it in 3 steps:** upload → pick a template → export a static showcase.
+
+**使用只要 3 步：** 上传 → 选模板 → 导出静态展示页。
+
 ![GalleryGen preview](public/readme/hero.png)
 
 ---
 
 ## Try It Online / 在线体验
 
-**[→ Open the live builder](https://gallerygen.netlify.app/)** · No install, no account. Drop images and start building right now.
+> **[→ Open the live builder](https://gallerygen.netlify.app/)** — no install, no account, no backend. Drop images and start building right now.
+>
+> **[→ 打开在线 Builder](https://gallerygen.netlify.app/)** — 无需安装、无需注册、没有后端。拖入图片就能开始。
 
-**[→ 打开在线 Builder](https://gallerygen.netlify.app/)** · 无需安装、无需注册，拖入图片即可立即开始。
+<sub>Want to see finished output first? Browse live template examples: <a href="https://gregarious-narwhal-e05197.netlify.app/">Template A — Editorial / Archive</a> · <a href="https://elaborate-starlight-03236e.netlify.app/">Template B — Showcase / Product</a></sub>
 
-See the exported result live:
+<sub>想先看成品？浏览在线模板示例：<a href="https://gregarious-narwhal-e05197.netlify.app/">Template A — Editorial / Archive</a> · <a href="https://elaborate-starlight-03236e.netlify.app/">Template B — Showcase / Product</a></sub>
 
-直接查看导出成品：
-
-- **Template A — Editorial / Archive**: [gregarious-narwhal-e05197.netlify.app](https://gregarious-narwhal-e05197.netlify.app/)
-- **Template B — Showcase / Product**: [elaborate-starlight-03236e.netlify.app](https://elaborate-starlight-03236e.netlify.app/)
+<sub>Developers: scroll down to **Local Development** if you prefer to run GalleryGen locally. / 开发者：如需本地运行，请滚动到下方的 **Local Development** 章节。</sub>
 
 ---
 
