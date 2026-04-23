@@ -1,9 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { GripVertical } from "lucide-react";
+import type { DragEvent } from "react";
 
 import type { AppLanguage } from "@/lib/i18n/dict";
 import { getDictionary } from "@/lib/i18n/dict";
+import { usePhotoReorderDrag } from "@/lib/drag/use-photo-reorder-drag";
 import type { GalleryProject } from "@/types/gallery";
 import {
   getShowcaseGalleryTemplateData,
@@ -14,6 +17,14 @@ type ShowcaseGalleryTemplateProps = {
   language: AppLanguage;
   project: GalleryProject;
   onRemovePhoto?: (photoId: string) => void;
+  onReorderPhoto?: (fromIndex: number, toIndex: number) => void;
+  onOpenPhoto?: (photoId: string) => void;
+};
+
+type HandleProps = {
+  draggable: true;
+  onDragStart: (event: DragEvent<HTMLElement>) => void;
+  onDragEnd: (event: DragEvent<HTMLElement>) => void;
 };
 
 type DeviceMockupProps = {
@@ -23,8 +34,12 @@ type DeviceMockupProps = {
   height: number;
   imageUrl: string;
   isDarkTheme: boolean;
+  onImageClick?: () => void;
+  openImageLabel?: string;
   onRemove?: () => void;
   removeLabel?: string;
+  reorderHandleProps?: HandleProps;
+  reorderHandleLabel?: string;
   width: number;
 };
 
@@ -49,10 +64,31 @@ function DeviceMockup({
   height,
   imageUrl,
   isDarkTheme,
+  onImageClick,
+  openImageLabel,
   onRemove,
   removeLabel,
+  reorderHandleProps,
+  reorderHandleLabel,
   width,
 }: DeviceMockupProps) {
+  const imageClassName = [
+    "block h-auto w-full",
+    onImageClick ? "cursor-zoom-in" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const reorderButton = reorderHandleProps ? (
+    <button
+      type="button"
+      {...reorderHandleProps}
+      aria-label={reorderHandleLabel}
+      className="absolute left-4 top-4 inline-flex h-8 w-8 cursor-grab items-center justify-center rounded-full bg-black/45 text-white opacity-0 backdrop-blur-sm transition hover:bg-black/65 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 group-hover:opacity-100 active:cursor-grabbing"
+    >
+      <GripVertical className="h-4 w-4" />
+    </button>
+  ) : null;
+
   if (device === "mobile") {
     return (
       <div
@@ -69,8 +105,12 @@ function DeviceMockup({
           width={width}
           height={height}
           unoptimized
-          className="block h-auto w-full"
+          draggable={false}
+          onClick={onImageClick}
+          aria-label={onImageClick ? openImageLabel : undefined}
+          className={imageClassName}
         />
+        {reorderButton}
         {onRemove ? (
           <button
             type="button"
@@ -111,8 +151,12 @@ function DeviceMockup({
         width={width}
         height={height}
         unoptimized
-        className="block h-auto w-full"
+        draggable={false}
+        onClick={onImageClick}
+        aria-label={onImageClick ? openImageLabel : undefined}
+        className={imageClassName}
       />
+      {reorderButton}
       {onRemove ? (
         <button
           type="button"
@@ -131,11 +175,40 @@ export function ShowcaseGalleryTemplate({
   language,
   project,
   onRemovePhoto,
+  onReorderPhoto,
+  onOpenPhoto,
 }: ShowcaseGalleryTemplateProps) {
   const dictionary = getDictionary(language);
   const template = getShowcaseGalleryTemplateData(project, language);
   const leadPhoto = template.leadPhoto;
   const isDarkTheme = template.galleryTheme === "dark";
+  const orderedIds = project.photos.map((photo) => photo.id);
+
+  const reorder = usePhotoReorderDrag({
+    orderedIds,
+    onReorder: onReorderPhoto ?? (() => undefined),
+  });
+  const reorderEnabled = Boolean(onReorderPhoto);
+
+  function reorderFigureClasses(photoId: string, baseClass: string): string {
+    if (!reorderEnabled) {
+      return baseClass;
+    }
+
+    const active = reorder.isActive(photoId);
+    const target = reorder.isTarget(photoId);
+
+    return [
+      baseClass,
+      "transition",
+      active ? "opacity-40" : "",
+      target
+        ? "ring-2 ring-emerald-400/70 ring-offset-4 ring-offset-transparent rounded-2xl"
+        : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+  }
 
   return (
     <article
@@ -195,7 +268,13 @@ export function ShowcaseGalleryTemplate({
 
         {leadPhoto ? (
           <section className="relative z-20 mb-24">
-            <figure className="mx-auto max-w-5xl px-4">
+            <figure
+              {...(reorderEnabled ? reorder.getDropProps(leadPhoto.id) : {})}
+              className={reorderFigureClasses(
+                leadPhoto.id,
+                "mx-auto max-w-5xl px-4",
+              )}
+            >
               <DeviceMockup
                 alt={leadPhoto.alt}
                 device={leadPhoto.device}
@@ -204,8 +283,16 @@ export function ShowcaseGalleryTemplate({
                 height={leadPhoto.height}
                 isDarkTheme={isDarkTheme}
                 className="shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)]"
+                onImageClick={
+                  onOpenPhoto ? () => onOpenPhoto(leadPhoto.id) : undefined
+                }
+                openImageLabel={dictionary.previewLightbox.openHint}
                 onRemove={onRemovePhoto ? () => onRemovePhoto(leadPhoto.id) : undefined}
                 removeLabel={`${dictionary.common.remove} ${leadPhoto.title ?? leadPhoto.alt}`}
+                reorderHandleProps={
+                  reorderEnabled ? reorder.getHandleProps(leadPhoto.id) : undefined
+                }
+                reorderHandleLabel={dictionary.photoOrder.dragHandle}
               />
 
               {leadPhoto.title ? (
@@ -228,7 +315,11 @@ export function ShowcaseGalleryTemplate({
           <section className="relative z-10">
             <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 md:grid-cols-12">
               {template.featurePhotos.map((photo) => (
-                <figure key={photo.id} className={getSlotClasses(photo.slot)}>
+                <figure
+                  key={photo.id}
+                  {...(reorderEnabled ? reorder.getDropProps(photo.id) : {})}
+                  className={reorderFigureClasses(photo.id, getSlotClasses(photo.slot))}
+                >
                   <DeviceMockup
                     alt={photo.alt}
                     device={photo.device}
@@ -236,8 +327,16 @@ export function ShowcaseGalleryTemplate({
                     width={photo.width}
                     height={photo.height}
                     isDarkTheme={isDarkTheme}
+                    onImageClick={
+                      onOpenPhoto ? () => onOpenPhoto(photo.id) : undefined
+                    }
+                    openImageLabel={dictionary.previewLightbox.openHint}
                     onRemove={onRemovePhoto ? () => onRemovePhoto(photo.id) : undefined}
                     removeLabel={`${dictionary.common.remove} ${photo.title ?? photo.alt}`}
+                    reorderHandleProps={
+                      reorderEnabled ? reorder.getHandleProps(photo.id) : undefined
+                    }
+                    reorderHandleLabel={dictionary.photoOrder.dragHandle}
                   />
 
                   {photo.title ? (

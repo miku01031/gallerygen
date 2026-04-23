@@ -1,7 +1,11 @@
+"use client";
+
 import Image from "next/image";
+import { GripVertical } from "lucide-react";
 
 import type { AppLanguage } from "@/lib/i18n/dict";
 import { getDictionary } from "@/lib/i18n/dict";
+import { usePhotoReorderDrag } from "@/lib/drag/use-photo-reorder-drag";
 import type { GalleryProject } from "@/types/gallery";
 import { getDefaultGalleryTemplateData } from "@/templates/default/get-default-gallery-template-data";
 
@@ -9,20 +13,48 @@ type DefaultGalleryTemplateProps = {
   language: AppLanguage;
   project: GalleryProject;
   onRemovePhoto?: (photoId: string) => void;
+  onReorderPhoto?: (fromIndex: number, toIndex: number) => void;
+  onOpenPhoto?: (photoId: string) => void;
 };
 
 export function DefaultGalleryTemplate({
   language,
   project,
   onRemovePhoto,
+  onReorderPhoto,
+  onOpenPhoto,
 }: DefaultGalleryTemplateProps) {
   const dictionary = getDictionary(language);
   const template = getDefaultGalleryTemplateData(project, language);
   const isDarkTheme = template.galleryTheme === "dark";
+  const orderedIds = project.photos.map((photo) => photo.id);
+
+  const reorder = usePhotoReorderDrag({
+    orderedIds,
+    onReorder: onReorderPhoto ?? (() => undefined),
+  });
+  const reorderEnabled = Boolean(onReorderPhoto);
 
   function renderMasonryPhoto(photo: (typeof template.photos)[number]) {
+    const isActive = reorderEnabled && reorder.isActive(photo.id);
+    const isTarget = reorderEnabled && reorder.isTarget(photo.id);
+    const dropProps = reorderEnabled ? reorder.getDropProps(photo.id) : undefined;
+    const handleProps = reorderEnabled
+      ? reorder.getHandleProps(photo.id)
+      : undefined;
+
     return (
-      <figure key={photo.id} className="group mb-6 [break-inside:avoid]">
+      <figure
+        key={photo.id}
+        {...(dropProps ?? {})}
+        className={[
+          "group relative mb-6 [break-inside:avoid] transition",
+          isActive ? "opacity-40" : "",
+          isTarget
+            ? "ring-2 ring-emerald-400/80 ring-offset-2 ring-offset-transparent rounded-lg"
+            : "",
+        ].join(" ")}
+      >
         <div className="relative">
           <Image
             src={photo.objectUrl}
@@ -30,8 +62,25 @@ export function DefaultGalleryTemplate({
             width={photo.width}
             height={photo.height}
             unoptimized
-            className="h-auto w-full break-inside-avoid rounded-lg object-cover shadow-sm transition-all duration-500 hover:scale-[1.02] hover:shadow-xl"
+            draggable={false}
+            onClick={onOpenPhoto ? () => onOpenPhoto(photo.id) : undefined}
+            aria-label={onOpenPhoto ? dictionary.previewLightbox.openHint : undefined}
+            className={[
+              "h-auto w-full break-inside-avoid rounded-lg object-cover shadow-sm transition-all duration-500 hover:scale-[1.02] hover:shadow-xl",
+              onOpenPhoto ? "cursor-zoom-in" : "",
+            ].join(" ")}
           />
+
+          {handleProps ? (
+            <button
+              type="button"
+              {...handleProps}
+              aria-label={dictionary.photoOrder.dragHandle}
+              className="absolute left-3 top-3 inline-flex h-8 w-8 cursor-grab items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition group-hover:opacity-100 hover:bg-black/60 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 active:cursor-grabbing"
+            >
+              <GripVertical className="h-4 w-4" />
+            </button>
+          ) : null}
 
           {onRemovePhoto ? (
             <button

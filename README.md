@@ -8,6 +8,10 @@
 
 **使用只要 3 步：** 上传 → 选模板 → 导出静态展示页。
 
+In the builder you can also **reorder** images (preview + sidebar) and **open a quick lightbox** on any image — both use the same order that exports to your ZIP.
+
+在 Builder 里还可以 **调整图片顺序**（预览区与侧栏共用同一顺序），并 **点击图片打开轻量预览** —— 顺序与导出的 ZIP 保持一致。
+
 ![GalleryGen preview](public/readme/hero.png)
 
 ---
@@ -46,13 +50,16 @@ GalleryGen 针对开发者和设计师反复遇到的三个问题而生。
 
 ## Core Workflow / 核心工作流
 
-Three steps. No configuration. Everything is local.
+No configuration. Everything is local.
 
-三步完成，无需配置，全程本地。
+无需配置，全程本地。
 
-1. **Drop** — drag local images or screenshots into the builder. / 把本地图片或截图拖进 Builder。
-2. **Showcase** — pick a template, edit title and description, preview live. / 选择模板，编辑标题和描述，实时预览。
-3. **Export** — download a ZIP with static HTML, CSS, and images, ready to publish. / 下载含静态 HTML、CSS 和图片的 ZIP，即可发布。
+1. **Upload** — drag images or pick files in the builder. / 在 Builder 中拖入图片或选择文件。
+2. **Reorder** — drag the grip handle in the preview or thumbnails in the sidebar; one shared order for all templates. / 在预览区拖动手柄，或在侧栏缩略图中调整顺序；所有模板共用同一顺序。
+3. **Preview & inspect** — live template preview; click an image for a lightweight lightbox (builder only). / 实时模板预览；点击图片打开轻量 lightbox（仅 Builder）。
+4. **Switch template** — choose Editorial / Archive or Showcase / Product. / 在 Editorial / Archive 与 Showcase / Product 之间切换。
+5. **Export** — download a ZIP with static HTML, CSS, and images. / 下载含静态 HTML、CSS 与图片的 ZIP。
+6. **Publish** — unzip and host on Netlify Drop, GitHub Pages, or any static host (see *After You Export*). / 解压后托管到 Netlify Drop、GitHub Pages 或任意静态托管（见 *导出之后怎么做*）。
 
 ---
 
@@ -158,12 +165,19 @@ MVP v1. The full local-to-static workflow is implemented:
 MVP v1。以下完整流程已经实现：
 
 - Local image upload / 本地图片导入
+- Drag-to-reorder in the builder preview (grip handle) and sidebar order panel — both update the same gallery order / 在 Builder 预览区（拖动手柄）与侧栏顺序面板中拖拽排序，共用同一套画廊顺序
+- Lightweight preview lightbox — click an image in the preview; previous/next follows the current order / 轻量预览 lightbox：在预览中点击图片打开；上一张 / 下一张遵循当前顺序
+- Reordered images stay consistent across live preview and exported ZIP / 调整后的顺序在实时预览与导出 ZIP 中保持一致
 - Live preview / 实时预览
 - Template switching — Editorial / Archive and Showcase / Product / 模板切换 — Editorial / Archive 与 Showcase / Product
 - Independent builder theme and gallery theme / 编辑器主题与画廊主题独立
 - ZIP export / ZIP 导出
 - Post-export publishing guidance (Netlify, GitHub Pages) / 导出后的发布指引（Netlify、GitHub Pages）
 - README snippet generator / README 片段生成器
+
+The current lightbox is available in the **builder preview only**. Exported pages remain lightweight static showcases (no lightbox in the ZIP).
+
+当前 **lightbox 仅用于 Builder 预览区**。导出结果仍然保持轻量静态展示页（ZIP 内不含 lightbox）。
 
 Scope is intentionally narrow for this release.
 
@@ -173,7 +187,7 @@ Scope is intentionally narrow for this release.
 
 ## Roadmap / 路线图
 
-- Improve drag-and-drop ordering ergonomics / 优化拖拽排序体验
+- Touch-friendly preview interactions where HTML5 drag-and-drop is limited / 在 HTML5 拖拽受限的环境下改进触控预览体验
 - Refine export polish and publishing guidance / 打磨导出与发布流程
 - Add stronger public demos / 补充更完整的公开演示
 - Expand metadata editing without turning the builder into a CMS / 谨慎扩展元数据编辑，不把 Builder 做成 CMS

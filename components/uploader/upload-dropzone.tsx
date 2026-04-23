@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type ChangeEvent, type DragEvent } from "react";
 
+import { dataTransferHasReorderType } from "@/lib/drag/reorder-drag";
 import type { AppLanguage } from "@/lib/i18n/dict";
 import { getDictionary } from "@/lib/i18n/dict";
 
@@ -46,6 +47,10 @@ export function UploadDropzone({
   }
 
   function handleDragOver(event: DragEvent<HTMLDivElement>) {
+    if (dataTransferHasReorderType(event.dataTransfer)) {
+      return;
+    }
+
     event.preventDefault();
     if (!disabled) {
       setIsDragging(true);
@@ -61,6 +66,10 @@ export function UploadDropzone({
   }
 
   function handleDrop(event: DragEvent<HTMLDivElement>) {
+    if (dataTransferHasReorderType(event.dataTransfer)) {
+      return;
+    }
+
     event.preventDefault();
     setIsDragging(false);
     handleFiles(event.dataTransfer.files);

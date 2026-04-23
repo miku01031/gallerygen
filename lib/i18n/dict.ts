@@ -89,6 +89,24 @@ type Dictionary = {
     editorial: string;
     showcase: string;
   };
+  photoOrder: {
+    label: string;
+    title: string;
+    description: string;
+    leadBadge: string;
+    moveUp: string;
+    moveDown: string;
+    indexLabel: (index: number) => string;
+    dragHandle: string;
+    previewHint: string;
+  };
+  previewLightbox: {
+    ariaLabel: string;
+    close: string;
+    previous: string;
+    next: string;
+    openHint: string;
+  };
   exportSuccess: {
     badge: string;
     title: string;
@@ -208,7 +226,7 @@ const dictionaries: Record<AppLanguage, Dictionary> = {
         "Select images, or choose a folder in supported browsers.",
       chooseImages: "Choose Images",
       chooseFolder: "Choose Folder",
-      uploadOrderHint: "Images keep the same order as upload.",
+      uploadOrderHint: "New uploads are appended in order — drag thumbnails below to fine-tune the sequence.",
       localFirst: "Local-first workflow",
       browserProcessing: "Image processing stays in the browser",
       zipExport: "Static gallery ZIP export",
@@ -235,6 +253,26 @@ const dictionaries: Record<AppLanguage, Dictionary> = {
         "Showcase / Product template only. This link appears at the bottom of the exported showcase page.",
       editorial: "Editorial",
       showcase: "Showcase",
+    },
+    photoOrder: {
+      label: "Gallery order",
+      title: "Arrange images",
+      description:
+        "Drag to reorder images. The first image becomes the lead visual in Showcase / Product layouts.",
+      leadBadge: "lead",
+      moveUp: "Move image earlier",
+      moveDown: "Move image later",
+      indexLabel: (index) => `Image ${index}`,
+      dragHandle: "Drag to reorder",
+      previewHint:
+        "Drag the grip to reorder. Click an image to open a quick preview.",
+    },
+    previewLightbox: {
+      ariaLabel: "Image preview",
+      close: "Close preview",
+      previous: "Previous image",
+      next: "Next image",
+      openHint: "Open preview",
     },
     exportSuccess: {
       badge: "Export complete",
@@ -367,7 +405,7 @@ const dictionaries: Record<AppLanguage, Dictionary> = {
       dropDescription: "可选择图片文件，部分浏览器支持直接选择文件夹。",
       chooseImages: "选择图片",
       chooseFolder: "选择文件夹",
-      uploadOrderHint: "当前展示顺序与上传顺序一致。",
+      uploadOrderHint: "新导入的图片会按顺序追加到末尾，可以在下方拖拽缩略图调整顺序。",
       localFirst: "本地优先工作流",
       browserProcessing: "图片处理全程在浏览器中完成",
       zipExport: "导出静态图库 ZIP",
@@ -390,6 +428,24 @@ const dictionaries: Record<AppLanguage, Dictionary> = {
       projectUrlHelp: "仅用于 Showcase / Product 模板。会在导出后的展示页底部显示一个项目入口链接。",
       editorial: "编辑感",
       showcase: "展示型",
+    },
+    photoOrder: {
+      label: "画廊顺序",
+      title: "调整图片顺序",
+      description: "拖拽可调整图片顺序。在 Showcase / Product 模板中，第一张图片会作为主视觉。",
+      leadBadge: "主图",
+      moveUp: "上移一张",
+      moveDown: "下移一张",
+      indexLabel: (index) => `图片 ${index}`,
+      dragHandle: "拖拽调整顺序",
+      previewHint: "拖拽把手可调整顺序；点击图片即可快速预览。",
+    },
+    previewLightbox: {
+      ariaLabel: "图片预览",
+      close: "关闭预览",
+      previous: "上一张",
+      next: "下一张",
+      openHint: "打开预览",
     },
     exportSuccess: {
       badge: "导出完成",

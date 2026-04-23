@@ -2,12 +2,15 @@
 
 import { useEffect, useMemo, useRef, useState, type DragEvent } from "react";
 
+import { PhotoOrderPanel } from "@/components/editor/photo-order-panel";
 import { SiteMetaEditor } from "@/components/editor/site-meta-editor";
 import { ExportSuccessModal } from "@/components/export/export-success-modal";
+import { PreviewLightbox } from "@/components/preview/preview-lightbox";
 import { AppHeader } from "@/components/shared/app-header";
 import type { ThemePreference } from "@/components/shared/theme-toggle";
 import { downloadGalleryZip } from "@/lib/export/download-gallery-zip";
 import { UploadDropzone } from "@/components/uploader/upload-dropzone";
+import { dataTransferHasReorderType } from "@/lib/drag/reorder-drag";
 import { buildGalleryExportAssets } from "@/lib/export/build-gallery-export-assets";
 import { getDictionary } from "@/lib/i18n/dict";
 import type {
@@ -47,6 +50,10 @@ function isThemePreference(value: string | null): value is ThemePreference {
 }
 
 function hasDraggedFiles(event: DragEvent<HTMLDivElement>): boolean {
+  if (dataTransferHasReorderType(event.dataTransfer)) {
+    return false;
+  }
+
   return Array.from(event.dataTransfer.types).includes("Files");
 }
 
@@ -61,6 +68,9 @@ export default function Home() {
   const [exportErrorMessage, setExportErrorMessage] = useState("");
   const [isExporting, setIsExporting] = useState(false);
   const [isExportSuccessOpen, setIsExportSuccessOpen] = useState(false);
+  const [activeLightboxPhotoId, setActiveLightboxPhotoId] = useState<string | null>(
+    null,
+  );
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isPageDragging, setIsPageDragging] = useState(false);
   const [themePreference, setThemePreference] = useState<ThemePreference>("system");
@@ -94,6 +104,15 @@ export default function Home() {
       activePhotoUrls.clear();
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      activeLightboxPhotoId !== null &&
+      !photos.some((photo) => photo.id === activeLightboxPhotoId)
+    ) {
+      setActiveLightboxPhotoId(null);
+    }
+  }, [photos, activeLightboxPhotoId]);
 
   useEffect(() => {
     const storedThemePreference = window.localStorage.getItem(THEME_STORAGE_KEY);
@@ -166,6 +185,38 @@ export default function Home() {
 
       return currentPhotos.filter((photo) => photo.id !== photoId);
     });
+  }
+
+  function handleReorderPhoto(fromIndex: number, toIndex: number) {
+    setPhotos((currentPhotos) => {
+      if (
+        fromIndex < 0 ||
+        fromIndex >= currentPhotos.length ||
+        toIndex < 0 ||
+        toIndex >= currentPhotos.length ||
+        fromIndex === toIndex
+      ) {
+        return currentPhotos;
+      }
+
+      const nextPhotos = currentPhotos.slice();
+      const [movedPhoto] = nextPhotos.splice(fromIndex, 1);
+      nextPhotos.splice(toIndex, 0, movedPhoto);
+
+      return nextPhotos;
+    });
+  }
+
+  function handleOpenPhoto(photoId: string) {
+    setActiveLightboxPhotoId(photoId);
+  }
+
+  function handleCloseLightbox() {
+    setActiveLightboxPhotoId(null);
+  }
+
+  function handleNavigateLightbox(nextPhotoId: string) {
+    setActiveLightboxPhotoId(nextPhotoId);
   }
 
   async function handleExportZip() {
@@ -283,6 +334,14 @@ export default function Home() {
         <section className="grid gap-6 xl:grid-cols-[minmax(0,390px)_minmax(0,1fr)] xl:items-start">
           <aside className="space-y-4">
             <UploadDropzone language={language} onSelectFiles={handleSelectFiles} />
+
+            {photos.length > 0 ? (
+              <PhotoOrderPanel
+                language={language}
+                photos={photos}
+                onReorder={handleReorderPhoto}
+              />
+            ) : null}
 
             <SiteMetaEditor
               language={language}
@@ -415,16 +474,32 @@ export default function Home() {
               </dl>
             </div>
 
+            {photos.length > 0 ? (
+              <p className="px-2 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
+                {dictionary.photoOrder.previewHint}
+              </p>
+            ) : null}
+
             <div className="rounded-[2rem] border border-zinc-200/80 bg-white/70 p-2 shadow-sm dark:border-white/10 dark:bg-white/5">
               <GalleryTemplatePreview
                 language={language}
                 project={project}
                 onRemovePhoto={handleRemovePhoto}
+                onReorderPhoto={handleReorderPhoto}
+                onOpenPhoto={handleOpenPhoto}
               />
             </div>
           </section>
         </section>
       </main>
+
+      <PreviewLightbox
+        language={language}
+        photos={photos}
+        activePhotoId={activeLightboxPhotoId}
+        onClose={handleCloseLightbox}
+        onNavigate={handleNavigateLightbox}
+      />
     </div>
   );
 }

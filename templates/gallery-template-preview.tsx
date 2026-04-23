@@ -7,12 +7,16 @@ type GalleryTemplatePreviewProps = {
   language: AppLanguage;
   project: GalleryProject;
   onRemovePhoto?: (photoId: string) => void;
+  onReorderPhoto?: (fromIndex: number, toIndex: number) => void;
+  onOpenPhoto?: (photoId: string) => void;
 };
 
 export function GalleryTemplatePreview({
   language,
   project,
   onRemovePhoto,
+  onReorderPhoto,
+  onOpenPhoto,
 }: GalleryTemplatePreviewProps) {
   switch (project.site.theme) {
     case "showcase":
@@ -21,6 +25,8 @@ export function GalleryTemplatePreview({
           language={language}
           project={project}
           onRemovePhoto={onRemovePhoto}
+          onReorderPhoto={onReorderPhoto}
+          onOpenPhoto={onOpenPhoto}
         />
       );
     case "default":
@@ -30,6 +36,8 @@ export function GalleryTemplatePreview({
           language={language}
           project={project}
           onRemovePhoto={onRemovePhoto}
+          onReorderPhoto={onReorderPhoto}
+          onOpenPhoto={onOpenPhoto}
         />
       );
   }
